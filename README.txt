@@ -1,39 +1,37 @@
-How to run:
+How to Run -
 
-Run pytest in the terminal, pytest.ini is providing the headless aspect with retaining traces and screenshots on failure
+Run pytest in the terminal. The pytest.ini file provides the default configuration, running the tests headlessly while retaining traces and screenshots on failure.
 
-Assumptions:
+Assumptions -
 
-Browser scope was set to Chrome; the most common browser, therefore, for such a small test exercise gives us the biggest audience.
+Browser Scope: Set to Chromium (Chrome); as the most common browser, this gives us the highest coverage for a short exercise.
 
-Test data was not provided, which was expected. Use of faker for fake dynamic data, but notably valid data. 
-Invalid data was hardcoded and deterministic, we should expect the same results on each iteration with the invalid data.
+Test Data: No test data was provided, which was expected. I used the Faker library to generate dynamic, but valid, data for the happy path. 
+Invalid data was hardcoded and deterministic, ensuring we get the exact same results on each iteration of the negative tests.
 
-Environemnt was provided as production, dittomusic.com/en/login
+Environment: Assumed to be the production environment https://dittomusic.com/en/login as provided.
 
-Upon completion of captcha sign-up would have been completed, confirmed with manual testing (my personal account sign-up)
-and from the exercise document itself.
+Test Completion: Upon triggering the CAPTCHA, the sign-up flow is considered successfully validated. 
+This was confirmed via manual testing (creating a personal account) and follows the exercise documentation.
 
-Approach/Trade-offs/Improvements/Additions:
+Approach, Trade-offs, & Future Improvements -
 
-The approach was to create a quick framework which demonstrates basic functionality, i.e. invalid email address, etc in
-the quickest way. These tests could be more complex, however, for this exercise, a quick sanity run over the requirements
-was the best due to time constraints.
+Approach: The goal was to create a lightweight framework that demonstrates core functionality quickly and effectively. 
+While these tests could be highly complex, a clean sanity run covering the core requirements was best due to time constraints.
 
-However, the trade-offs of the above are that we only know that the invalid email/password message is visible but not what it should be
-another assumption would need to be made, what is in production is correct then validate that message against itself. This
-would provide a test that would pass regardless of if the message was correct; can't ask a PO.
+Trade-off (Error Messages): Currently, we assert that the invalid email/password message is visible, but we are assuming the text currently in production is correct. 
+Without a Product Owner to provide the exact intended copy, we are validating the message against itself.
 
-Validating that upon invalid email or password upon CTA didn't fire an event, again complexity and time constraints.
-The invalid email/password messages are behind pesudo-elements ::before ::after. Javascript can be written to read
-the pesudo-element and validate.
+Trade-off (Pseudo-elements): The invalid email/password messages are rendered using CSS pseudo-elements (::before, ::after). For this exercise, visibility and structural presence were checked. 
+In the future, JavaScript execution can be added to read and strictly validate the exact text content inside these pseudo-elements.
 
-Adding checks on the terms & contitions tab opening to the correct URL and with expected content.
+Improvement (Event Firing): A future addition would intercept network requests to ensure that clicking the Call to Action (CTA) with invalid data does not fire a backend API or analytics event.
 
-Understanding how Ditto Music handles logins/sign-ups for their production environment; my assumption is that the journey
-wouldn't stop at captcha and there is some tooling/api to get past this.
+Improvement (Visual Debugging): Adding visual highlighting for locators right before they are clicked or asserted to make trace-viewing and debugging easier.
 
-Signing up with a marketing checkbox ticked and unticked. Following this, making sure the CTA doesn't fire an event upon
-clicking sign-up with terms not checked.
+Improvement (External Links): Adding checks to ensure the Terms & Conditions link successfully opens the correct URL in a new tab with the expected content.
 
-There are a lot of additions that could be made but these would be the most important additions.
+Improvement (CAPTCHA Bypass): Understanding how Ditto Music handles automated sign-ups internally. 
+I assume the pipeline wouldn't stop at the CAPTCHA in a real CI/CD environment, and there would be a testing API or token used to bypass it.
+
+Improvement (Checkbox States): Expanding the test suite to sign up with the marketing checkbox ticked vs. unticked, and verifying the CTA is disabled or blocks submission entirely if the Terms checkbox is left unchecked.
